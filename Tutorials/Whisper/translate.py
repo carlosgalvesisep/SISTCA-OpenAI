@@ -11,6 +11,9 @@ client = OpenAI(api_key=api_key)
 audio_file= open("Tutorials/Whisper/audio.wav", "rb")
 translation = client.audio.translations.create(
     model = "whisper-1", 
-    file = audio_file
+    file = audio_file,
+    response_format="verbose_json",
 )
-print(translation.text)
+
+print(f"Detected language: {translation.language}")
+print(f"Transcribed text: {translation.text}")
