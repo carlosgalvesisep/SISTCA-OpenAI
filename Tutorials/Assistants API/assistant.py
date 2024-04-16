@@ -1,6 +1,8 @@
 import os
 from dotenv import load_dotenv
 from openai import OpenAI
+from runners.standard_run import std_run
+from runners.streaming_run import streaming_run
 
 load_dotenv()
 
@@ -25,17 +27,5 @@ message = client.beta.threads.messages.create(
 
 print(message.content[0].text.value)
 
-run = client.beta.threads.runs.create_and_poll(
-  thread_id=thread.id,
-  assistant_id=assistant.id,
-  instructions="Please address the user as Jane Doe. The user has a premium account."
-)
-
-if run.status == 'completed': 
-  messages = client.beta.threads.messages.list(
-    thread_id=thread.id
-  )
-
-  print(messages.data[0].content[0].text.value)
-else:
-  print(run.status)
+#print(std_run(thread.id, assistant.id))
+print(streaming_run(thread.id, assistant.id))
