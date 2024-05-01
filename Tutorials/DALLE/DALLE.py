@@ -13,3 +13,6 @@ response = client.images.generate(
 
 image_url = response.data[0].url
 print(image_url)
+
+
+
