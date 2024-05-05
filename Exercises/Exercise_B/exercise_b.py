@@ -12,7 +12,7 @@ client = OpenAI(api_key=api_key)
 
 
 # load the audio file
-audio_input = open("Exercises/Exercise_B/Whisper/audio.wav", "rb")
+audio_input = open("Exercises/Exercise_B/audio.wav", "rb")
 
 
 # transcribe contents and detect the input language
@@ -49,3 +49,12 @@ translated_audio = client.audio.speech.create(
 output_file_path = Path(__file__).parent / f"translation.mp3"
 
 translated_audio.stream_to_file(output_file_path)
+
+
+# test the output
+
+print(f"Detected language: {detected_language} \n")
+print(f"Transcribed text: {transcription.text} \n")
+
+print(f"Translated text: {translated_text} \n")
+print(f"Translated audio file saved to {output_file_path}")
