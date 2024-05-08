@@ -1,8 +1,8 @@
 import os
 from openai import OpenAI
 
-from runners.function_calling.streaming import streaming
-from runners.function_calling.standard import standard
+from runners.streaming_run_FC import streaming
+from runners.standard_run_FC import standard
 client = OpenAI()
 
 assistant = client.beta.assistants.create(
