@@ -1,14 +1,15 @@
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from openai import OpenAI
 from typing_extensions import override
 from openai import AssistantEventHandler
 
-load_dotenv()
+#load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+#api_key = os.getenv("OPENAI_API_KEY")
 
-client = OpenAI(api_key=api_key)
+client = OpenAI(#api_key=api_key
+                )
 
 def streaming_run (thread_id, assistant_id):
 

@@ -1,12 +1,13 @@
 import os
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from openai import OpenAI
 
-load_dotenv()
+#load_dotenv()
 
-api_key = os.getenv("OPENAI_API_KEY")
+#api_key = os.getenv("OPENAI_API_KEY")
 
-client = OpenAI(api_key=api_key)
+client = OpenAI(#api_key=api_key
+                )
 
 def std_run (thread_id, assistant_id):
     run = client.beta.threads.runs.create_and_poll(
@@ -22,3 +23,5 @@ def std_run (thread_id, assistant_id):
         return(messages.data[0].content[0].text.value)
     else:
         return(run.status)
+
+
