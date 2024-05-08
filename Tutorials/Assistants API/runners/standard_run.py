@@ -6,9 +6,14 @@ def std_run (thread_id, assistant_id, client):
     )   
 
     if run.status == 'completed': 
+
         messages = client.beta.threads.messages.list(
             thread_id = thread_id
         )
+
+        if messages.data[0].content[0].type == 'image_file':
+            return(messages.data[0].content[0].image_file.file_id)
+
         return(messages.data[0].content[0].text.value)        
 
     else:
