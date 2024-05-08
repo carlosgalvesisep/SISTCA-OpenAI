@@ -1,17 +1,8 @@
-import os
-#from dotenv import load_dotenv
-from openai import OpenAI
 from typing_extensions import override
 from openai import AssistantEventHandler
 
-#load_dotenv()
 
-#api_key = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(#api_key=api_key
-                )
-
-def streaming_run (thread_id, assistant_id):
+def streaming_run (thread_id, assistant_id, client):
 
     # First, we create a EventHandler class to define
     # how we want to handle the events in the response stream.
@@ -46,7 +37,7 @@ def streaming_run (thread_id, assistant_id):
     with client.beta.threads.runs.stream(
         thread_id=thread_id,
         assistant_id=assistant_id,
-        instructions="Please address the user as Jane Doe. The user has a premium account.",
+        instructions="Please address the user as SISTCA student.",
         event_handler=EventHandler(),
     ) as stream:
         stream.until_done()
