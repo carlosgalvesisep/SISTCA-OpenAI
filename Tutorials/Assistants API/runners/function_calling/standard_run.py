@@ -1,25 +1,15 @@
-import os
-#from dotenv import load_dotenv
-from openai import OpenAI
+def std_run (thread_id, assistant_id, client):    
 
-#load_dotenv()
-
-#api_key = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(#api_key=api_key
-                )
-
-def standard (thread_id, assistant_id):
     run = client.beta.threads.runs.create_and_poll(
-    thread_id=thread_id,
-    assistant_id=assistant_id,
+        thread_id=thread_id,
+        assistant_id=assistant_id,
     )
     
     if run.status == 'completed':
         messages = client.beta.threads.messages.list(
             thread_id=thread_id
         )
-        print(messages)
+        print(messages.data[0].content[0].text.value)
     else:
         print(run.status)
     
@@ -30,8 +20,8 @@ def standard (thread_id, assistant_id):
     for tool in run.required_action.submit_tool_outputs.tool_calls:
         if tool.function.name == "get_current_temperature":
             tool_outputs.append({
-            "tool_call_id": tool.id,
-            "output": "57"
+                "tool_call_id": tool.id,
+                "output": "57"
             })
         elif tool.function.name == "get_rain_probability":
             tool_outputs.append({
@@ -43,9 +33,9 @@ def standard (thread_id, assistant_id):
     if tool_outputs:
         try:
             run = client.beta.threads.runs.submit_tool_outputs_and_poll(
-            thread_id=thread_id,
-            run_id=run.id,
-            tool_outputs=tool_outputs
+                thread_id=thread_id,
+                run_id=run.id,
+                tool_outputs=tool_outputs
             )
             print("Tool outputs submitted successfully.")
         except Exception as e:

@@ -1,13 +1,16 @@
 import os
-from openai import OpenAI
+from dotenv import load_dotenv
+from client import openai_client
+from runners.function_calling.standard_run import std_run
+from runners.function_calling.streaming_run import streaming_run
 
-from runners.streaming_run_FC import streaming
-from runners.standard_run_FC import standard
-client = OpenAI()
+load_dotenv()
+
+client = openai_client.create()
 
 assistant = client.beta.assistants.create(
     instructions="You are a weather bot. Use the provided functions to answer questions.",
-    model="gpt-3.5-turbo",
+    model=os.getenv("MODEL"),
     tools=[
         {
             "type": "function",
@@ -54,12 +57,12 @@ assistant = client.beta.assistants.create(
 
 
 thread = client.beta.threads.create()
+
 message = client.beta.threads.messages.create(
     thread_id=thread.id,
     role="user",
     content="What's the weather in San Francisco today and the likelihood it'll rain?",
 )
 
-
-#print(streaming(thread.id, assistant.id))
-print(standard(thread.id, assistant.id))
+print(std_run(thread.id, assistant.id, client))
+#print(streaming_run(thread.id, assistant.id, client))
