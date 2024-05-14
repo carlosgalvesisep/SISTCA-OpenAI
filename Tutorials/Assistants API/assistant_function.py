@@ -1,28 +1,25 @@
 import os
-from dotenv import load_dotenv
-from client import openai_client
+from openai import OpenAI
+#from client import openai_client
 from runners.function_calling.standard_run import std_run
-from runners.function_calling.streaming_run import streaming_run
 
-load_dotenv()
-
-client = openai_client.create()
+client = OpenAI()
 
 assistant = client.beta.assistants.create(
     instructions="You are a weather bot. Use the provided functions to answer questions.",
-    model=os.getenv("MODEL"),
+    model="gpt-3.5-turbo",
     tools=[
         {
             "type": "function",
             "function": {
-                "name": "get_current_temperature",
-                "description": "Get the current temperature for a specific location",
+                "name": "get_max_temperature",
+                "description": "Get the max temperature for a specific location",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "location": {
                             "type": "string",
-                            "description": "The city and state, e.g., San Francisco, CA"
+                            "description": "The country, e.g., Portugal, 1110600"
                         },
                         "unit": {
                             "type": "string",
@@ -44,7 +41,7 @@ assistant = client.beta.assistants.create(
                     "properties": {
                     "location": {
                         "type": "string",
-                        "description": "The city and state, e.g., San Francisco, CA"
+                        "description": "The country, e.g., Portugal, 1110600"
                     }
                     },
                     "required": ["location"]
@@ -61,8 +58,9 @@ thread = client.beta.threads.create()
 message = client.beta.threads.messages.create(
     thread_id=thread.id,
     role="user",
-    content="What's the weather in San Francisco today and the likelihood it'll rain?",
+    content="What's the max temperature for today in Portugal and the likelihood it'll rain?",
 )
 
-print(std_run(thread.id, assistant.id, client))
-#print(streaming_run(thread.id, assistant.id, client))
+location_id = "1110600"  # Portugal´s ID
+
+print(std_run(thread.id, assistant.id, client, location_id))
