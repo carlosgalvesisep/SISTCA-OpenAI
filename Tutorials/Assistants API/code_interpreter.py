@@ -8,7 +8,7 @@ load_dotenv()
 client = openai_client.create()
 
 file = client.files.create(
-    file=open("../customers-100.csv", "rb"),
+    file=open("Tutorials/Assistants API/customers-100.csv", "rb"),
     purpose='assistants'
 )
 
