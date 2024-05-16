@@ -1,3 +1,5 @@
+# DALL-E Variation
+
 from IPython.display import display, Image
 from openai import OpenAI
 client = OpenAI()
