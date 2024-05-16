@@ -1,7 +1,40 @@
 from typing_extensions import override
 from openai import AssistantEventHandler
  
+import requests, json
 
+def get_location_id(location_name):
+    url = "https://api.ipma.pt/open-data/distrits-islands.json"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            for location in data["data"]:
+                if location["local"].lower() == location_name.lower():
+                    return str(location["globalIdLocal"])
+            return None  # Location not found
+        else:
+            print("Failed to fetch data:", response.status_code)
+            return None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+    
+def get_weather_data(location_id):
+    url = f"https://api.ipma.pt/open-data/forecast/meteorology/cities/daily/{location_id}.json"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            forecast = data["data"][0]
+            return forecast
+        else:
+            print("Failed to fetch data:", response.status_code)
+            return None
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
+    
 def streaming_run (thread_id, assistant_id, client):
 
     class EventHandler(AssistantEventHandler):
@@ -19,10 +52,12 @@ def streaming_run (thread_id, assistant_id, client):
             tool_outputs = []
             
             for tool in data.required_action.submit_tool_outputs.tool_calls:
-                if tool.function.name == "get_current_temperature":
-                    tool_outputs.append({"tool_call_id": tool.id, "output": "57"})
-                elif tool.function.name == "get_rain_probability":
-                    tool_outputs.append({"tool_call_id": tool.id, "output": "0.06"})
+                if tool.function.name == "get_weather_data":
+                    location_id = get_location_id(json.loads(tool.function.arguments)["location"])
+                    forecast = get_weather_data(location_id)
+                    tool_outputs.append({"tool_call_id": tool.id,
+                                        "output": f"Rain probability: {forecast['precipitaProb']}, Max temperature: {forecast['tMin']}, Min temperature: {forecast['tMax']}"
+                                        })
             
             # Submit all tool_outputs at the same time
             self.submit_tool_outputs(tool_outputs, run_id)
