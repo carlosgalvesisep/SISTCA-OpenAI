@@ -1,7 +1,7 @@
 import os
 from openai import OpenAI
 #from client import openai_client
-from runners.function_calling.standard_run import std_run
+from runners.standard_run import std_run
 from runners.function_calling.streaming_run import streaming_run
 
 client = OpenAI()
