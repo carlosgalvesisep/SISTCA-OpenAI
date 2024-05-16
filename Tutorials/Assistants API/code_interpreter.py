@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from client import openai_client
 from runners.standard_run import std_run
+from runners.streaming_run import streaming_run
 
 load_dotenv()
 
@@ -16,7 +17,11 @@ assistant = client.beta.assistants.create(
     instructions="Your purpose is to analyze the provided documents and to provide answers based on them.",
     model=os.getenv("MODEL"),
     tools=[{"type": "code_interpreter"}],
-    file_ids=[file.id]
+    tool_resources={
+        "code_interpreter": {
+        "file_ids": [file.id]
+        }
+    }
 )
 
 thread = client.beta.threads.create()
@@ -30,6 +35,7 @@ message = client.beta.threads.messages.create(
 print(message.content[0].text.value + "\n")
 
 file_id = std_run(thread.id, assistant.id, client)
+#file_id = streaming_run(thread.id, assistant.id, client)
 
 image_data = client.files.content(file_id=file_id)
 image_data_bytes = image_data.read()
