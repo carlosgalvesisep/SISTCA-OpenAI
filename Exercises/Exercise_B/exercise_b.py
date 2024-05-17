@@ -48,7 +48,7 @@ translated_audio = client.audio.speech.create(
 
 output_file_path = Path(__file__).parent / f"translation.mp3"
 
-translated_audio.stream_to_file(output_file_path)
+translated_audio.write_to_file(output_file_path)
 
 
 # test the output
