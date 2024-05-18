@@ -1,8 +1,9 @@
 import os
 from openai import OpenAI
+#from client import openai_client
+from runners.standard_run import std_run
+from runners.function_calling.streaming_run import streaming_run
 
-from runners.streaming_run_FC import streaming
-from runners.standard_run_FC import standard
 client = OpenAI()
 
 assistant = client.beta.assistants.create(
@@ -12,37 +13,15 @@ assistant = client.beta.assistants.create(
         {
             "type": "function",
             "function": {
-                "name": "get_current_temperature",
-                "description": "Get the current temperature for a specific location",
+                "name": "get_weather_data",
+                "description": "Get the current weather forecast for the specified location",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "location": {
                             "type": "string",
-                            "description": "The city and state, e.g., San Francisco, CA"
-                        },
-                        "unit": {
-                            "type": "string",
-                            "enum": ["Celsius", "Fahrenheit"],
-                            "description": "The temperature unit to use. Infer this from the user's location."
+                            "description": "City or region for which to get the weather forecast",
                         }
-                    },
-                    "required": ["location", "unit"]
-                }
-            }
-        },
-        {
-            "type": "function",
-            "function": {
-                "name": "get_rain_probability",
-                "description": "Get the probability of rain for a specific location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                    "location": {
-                        "type": "string",
-                        "description": "The city and state, e.g., San Francisco, CA"
-                    }
                     },
                     "required": ["location"]
                 }
@@ -52,14 +31,17 @@ assistant = client.beta.assistants.create(
 )
 
 
-
 thread = client.beta.threads.create()
+
+#Define the location name
+location_name = "Lisboa"
+
 message = client.beta.threads.messages.create(
     thread_id=thread.id,
     role="user",
-    content="What's the weather in San Francisco today and the likelihood it'll rain?",
+    content=f"How is the weather today in {location_name}?",
 )
+print(message.content[0].text.value + "\n")
 
-
-#print(streaming(thread.id, assistant.id))
-print(standard(thread.id, assistant.id))
+#print(std_run(thread.id, assistant.id, client))
+print(streaming_run(thread.id, assistant.id, client))
