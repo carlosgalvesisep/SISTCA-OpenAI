@@ -1,15 +1,13 @@
 import os
-from dotenv import load_dotenv
-from client import openai_client
+from openai import OpenAI
 from runners.standard_run import std_run
 from runners.streaming_run import streaming_run
 
-load_dotenv()
 
-client = openai_client.create()
+client = OpenAI()
 
 file = client.files.create(
-    file=open("Tutorials/Assistants API/customers-100.csv", "rb"),
+    file=open("resources/customers-100.csv", "rb"),
     purpose='assistants'
 )
 
@@ -35,14 +33,16 @@ message = client.beta.threads.messages.create(
 print(message.content[0].text.value + "\n")
 
 file_id = std_run(thread.id, assistant.id, client)
-#file_id = streaming_run(thread.id, assistant.id, client)
+#file_id = streaming_run(thread.id, assistants.id, client)
 
 image_data = client.files.content(file_id=file_id)
 image_data_bytes = image_data.read()
 
 image_name = "graph.png"
 
-with open(image_name, "wb") as file:
-    file.write(image_data_bytes)
+image_path = os.path.join("resources", image_name)
+
+with open(image_path, "wb") as image_file:
+    image_file.write(image_data_bytes)
 
 print(f"Graph saved as {image_name}.")

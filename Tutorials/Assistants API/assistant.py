@@ -1,13 +1,10 @@
 import os
-from dotenv import load_dotenv
-from client import openai_client
+from openai import OpenAI
 from runners.standard_run import std_run
 from runners.streaming_run import streaming_run
 
-load_dotenv()
 
-client = openai_client.create()
-
+client = OpenAI()
 assistant = client.beta.assistants.create(
   name="Math Tutor",
   instructions="You are a personal math tutor. Write and run code to answer math questions.",

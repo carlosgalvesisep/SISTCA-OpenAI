@@ -4,9 +4,9 @@ client = OpenAI()
 response = client.chat.completions.create(
   model="gpt-3.5-turbo",
   messages=[
-    {"role": "system", "content": "You are a helpful football assistant."},
+    {"role": "system", "content": "You are a helpful football assistants."},
     {"role": "user", "content": "Who won the Euro back in 2016?"},
-    {"role": "assistant", "content": "Portugal won the World Cup in 2016."},
+    {"role": "assistants", "content": "Portugal won the World Cup in 2016."},
     {"role": "user", "content": "Where was it played, what was the score of the final and who scored in that game?"}
   ]
 )
