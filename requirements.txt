@@ -1,0 +1,7 @@
+openai
+python-dotenv
+requests
+ipython
+jupyter
+numpy
+pathlib
