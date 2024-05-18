@@ -1,8 +1,11 @@
+import os
 from openai import OpenAI
+
+
 client = OpenAI()
 
 response = client.chat.completions.create(
-  model="gpt-3.5-turbo",
+  model=os.getenv("MODEL"),
   messages=[
     {"role": "system", "content": "You are a helpful football assistants."},
     {"role": "user", "content": "Who won the Euro back in 2016?"},

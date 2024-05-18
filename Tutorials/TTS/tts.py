@@ -1,6 +1,7 @@
 from pathlib import Path
 from openai import OpenAI
 
+
 # create an instance of OpenAI, the default construct gets the token from environment variables
 client = OpenAI()
 
@@ -17,5 +18,3 @@ response = client.audio.speech.create(
 
 # saves the audio file to specified path
 response.write_to_file(speech_file_path)
-
-

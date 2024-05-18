@@ -1,7 +1,7 @@
-# DALL-E Variation
-
-from IPython.display import display, Image
 from openai import OpenAI
+from IPython.display import display, Image
+
+
 client = OpenAI()
 
 response = client.images.create_variation(

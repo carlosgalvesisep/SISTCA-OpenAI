@@ -1,9 +1,8 @@
-# DALL-E Edit
-
-
 from openai import OpenAI
-client = OpenAI()
 from IPython.display import display, Image  
+
+
+client = OpenAI()
 
 response = client.images.edit(
   model="dall-e-2",
