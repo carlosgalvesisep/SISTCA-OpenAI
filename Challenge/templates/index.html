@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI Challenge</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #popup-bar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: #70939c;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: right 0.3s ease;
+            margin-top: 50px;
+        }
+
+        #settings-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+            cursor: pointer;
+        }
+
+        #settings-icon img {
+            width: 24px;
+            height: 24px;
+        }
+
+        #filters {
+            padding: 10px; 
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        #filters div {
+            margin-bottom: 10px;
+        }
+
+        #filters label {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        #filters select, #filters button {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: small;
+            width: calc(100% - 22px);
+        }
+
+        #apply-filters button, #reset-filters button {
+            width: 100%;
+            border-radius: 7px;
+        }
+
+        #output {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: small;
+            height: 200px;
+            overflow-y: auto;
+            width: calc(100% - 400px);
+        }
+    </style>
+    <!-- Include Leaflet CSS and JS files -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Include Leaflet MarkerCluster CSS and JS files -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+</head>
+<body>
+    <div id="popup-bar">
+        <div id="filters">
+            <!-- Dropdown menu for filtering type -->
+            <div id="typeFilter">
+                <label for="typeDropdown">Type Filter:</label>
+                <select id="typeDropdown">
+                    <option value="all">All</option>
+                    <option value="films">Films</option>
+                    <option value="tvShows">TV Shows</option>
+                    <option value="books">Books</option>
+                </select>
+            </div>
+
+            <!-- Dropdown menu for genre type -->
+            <div id="genreFilter">
+                <label for="genreDropdown">Genre Filter:</label>
+                <select id="genreDropdown">
+                    <option value="all">All</option>
+                    <option value="action">Action</option>
+                    <option value="adventure">Adventure</option>
+                    <option value="animation">Animation</option>
+                    <option value="biography">Biography</option>
+                    <option value="comedy">Comedy</option>
+                    <option value="crime">Crime</option>
+                    <option value="documentary">Documentary</option>
+                    <option value="drama">Drama</option>
+                    <option value="family">Family</option>
+                    <option value="fantasy">Fantasy</option>
+                    <option value="history">History</option>
+                    <option value="horror">Horror</option>
+                    <option value="music">Music</option>
+                    <option value="musical">Musical</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="scienceFiction">Science Fiction</option>
+                    <option value="sport">Sport</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="war">War</option>
+                    <option value="western">Western</option>
+                </select>
+            </div>
+
+
+            <!-- Dropdown menu for filtering quantity -->
+            <div id="quantityFilter">
+                <label for="quantityDropdown">Quantity Filter:</label>
+                <select id="quantityDropdown">
+                    <option value="1">1</option>
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+
+            <!-- Apply and Reset buttons -->
+            <div id="apply-filters">
+                <button onclick="applyFilters()">Apply Filters</button>
+            </div>
+            <div id="reset-filters">
+                <button onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-icon" onclick="toggleMenu()">
+        <img src="{{ url_for('static', filename='settings.png') }}" alt="Settings">
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        var menuOpen = false;
+
+        function toggleMenu() {
+            menuOpen = !menuOpen;
+            var popupBar = document.getElementById('popup-bar');
+            if (menuOpen) {
+                popupBar.style.right = '0';
+            } else {
+                popupBar.style.right = '-250px';
+            }
+        }
+
+        function applyFilters() {
+            var typeFilter = document.getElementById('typeDropdown').value;
+            var genreFilter = document.getElementById('genreDropdown').value
+            var quantityFilter = document.getElementById('quantityDropdown').value;
+            
+
+            var response = `Filters applied:\nType: ${typeFilter}\nGenre: ${genreFilter}\nQuantity: ${quantityFilter}`;
+
+            document.getElementById('output').innerText = response;
+
+        }
+
+        function resetFilters() {
+        
+            document.getElementById('typeDropdown').value = 'all';
+            document.getElementById('genreDropdown').value = 'all';
+            document.getElementById('quantityDropdown').value = '1';
+
+            document.getElementById('output').innerText = '';
+        }
+    </script>
+</body>
+</html>
