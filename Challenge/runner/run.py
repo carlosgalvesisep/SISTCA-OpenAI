@@ -30,7 +30,7 @@ def std_run (thread_id, assistant_id, client):
         if tool.function.name == "get_cinema_info":
             information = cinema(json.loads(tool.function.arguments)["type"],json.loads(tool.function.arguments)["theme"],json.loads(tool.function.arguments)["quantity"])
             tool_outputs.append({"tool_call_id": tool.id,
-                                "output": f"{json.loads(tool.function.arguments)["type"]} information JSON: {information}"
+                                "output": f" information JSON: {information}"
                                 })
 
     # Submitting tool outputs and polling for completion status
@@ -50,6 +50,6 @@ def std_run (thread_id, assistant_id, client):
     # Retrieving messages after tool output submission
     if run.status == 'completed':
         messages = client.beta.threads.messages.list(thread_id=thread_id)
-        print(messages.data[0].content[0].text.value)
+        return messages.data[0].content[0].text.value
     else:
         print(run.status)
