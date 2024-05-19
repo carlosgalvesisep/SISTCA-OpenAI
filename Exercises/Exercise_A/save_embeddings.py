@@ -1,8 +1,6 @@
-
-
-from openai import OpenAI  # for generating embeddings
-import pandas as pd  # for DataFrames to store article sections and embeddings
-import re  # for cutting <ref> links out of Wikipedia articles
+from openai import OpenAI 
+import pandas as pd  
+import re  
 import tiktoken 
 import PyPDF2
 
