@@ -1,4 +1,5 @@
 from functions import get_location_id, get_weather_data
+
 import json
 
 def std_run (thread_id, assistant_id, client):

@@ -1,14 +1,14 @@
 import os
 from openai import OpenAI
-#from client import openai_client
 from runners.standard_run import std_run
 from runners.function_calling.streaming_run import streaming_run
+
 
 client = OpenAI()
 
 assistant = client.beta.assistants.create(
     instructions="You are a weather bot. Use the provided functions to answer questions.",
-    model="gpt-3.5-turbo",
+    model=os.getenv("MODEL"),
     tools=[
         {
             "type": "function",
@@ -43,5 +43,5 @@ message = client.beta.threads.messages.create(
 )
 print(message.content[0].text.value + "\n")
 
-#print(std_run(thread.id, assistant.id, client))
+#print(std_run(thread.id, assistants.id, client))
 print(streaming_run(thread.id, assistant.id, client))
