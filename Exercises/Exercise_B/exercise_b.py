@@ -1,15 +1,8 @@
-import os
 from pathlib import Path
-from dotenv import load_dotenv
 from openai import OpenAI
 
 
-load_dotenv()
-
-api_key = os.getenv("OPENAI_API_KEY")
-
-client = OpenAI(api_key=api_key)
-
+client = OpenAI()
 
 # load the audio file
 audio_input = open("Exercises/Exercise_B/audio.wav", "rb")
