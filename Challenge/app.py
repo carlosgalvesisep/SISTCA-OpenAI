@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from movie_assistant import get_cinema_info
 
@@ -7,13 +7,17 @@ CORS(app)
 
 @app.route('/')
 def index():
-    typeFilter = request.args.get('typeFilter')
-    genreFilter = request.args.get('genreFilter')
-    quantityFilter = request.args.get('quantityFilter')
+    return render_template('index.html')
 
+@app.route('/apply_filters', methods=['GET'])
+def submit():
+    type_filter = request.args.get('type')
+    genre_filter = request.args.get('genre')
+    quantity_filter = request.args.get('quantity')
     
-    response = get_cinema_info(typeFilter, genreFilter, quantityFilter)
-
+    print(f"{type_filter}, {genre_filter}, {quantity_filter}")
+    response =  get_cinema_info(type_filter, genre_filter, quantity_filter)
+    
     return jsonify(response)
 
 if __name__ == '__main__':

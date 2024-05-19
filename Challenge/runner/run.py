@@ -50,6 +50,6 @@ def std_run (thread_id, assistant_id, client):
     # Retrieving messages after tool output submission
     if run.status == 'completed':
         messages = client.beta.threads.messages.list(thread_id=thread_id)
-        print(messages.data[0].content[0].text.value)
+        return messages.data[0].content[0].text.value
     else:
         print(run.status)

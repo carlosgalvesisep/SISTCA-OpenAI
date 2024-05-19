@@ -172,16 +172,32 @@
             }
         }
 
-        function applyFilters() {
+        async function applyFilters() {
             var typeFilter = document.getElementById('typeDropdown').value;
             var genreFilter = document.getElementById('genreDropdown').value
             var quantityFilter = document.getElementById('quantityDropdown').value;
             
 
-            var response = `Filters applied:\nType: ${typeFilter}\nGenre: ${genreFilter}\nQuantity: ${quantityFilter}`;
+            var query = `Filters applied:\nType: ${typeFilter}\nGenre: ${genreFilter}\nQuantity: ${quantityFilter}`;
+            document.getElementById('output').innerText = query;
+            try {
+                let response = await fetch(`/apply_filters?type=${typeFilter}&genre=${genreFilter}&quantity=${quantityFilter}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-            document.getElementById('output').innerText = response;
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
 
+                let data = await response.json();
+                console.log('Success:', data);
+                document.getElementById('output').innerText += `\n\n ${data}`;
+            } catch (error) {
+                console.error('Error:', error);
+            }
         }
 
         function resetFilters() {

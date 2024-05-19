@@ -55,5 +55,4 @@ def get_cinema_info(typeFilter, genreFilter, quantityFilter):
     )
 
     response = std_run(thread.id, assistant.id, client)
-    
     return response
